@@ -10,6 +10,32 @@ module Byebug
     # If in remote mode, wait for the remote connection
     attr_accessor :wait_connection
 
+    def start_websocket_server(host = nil, port = 7654)
+      return if @thread
+      self.interface = nil
+      start
+      mutex = Mutex.new
+      proceed = ConditionVariable.new
+
+      p "starting websocket server on #{port}"
+      server = TCPServer.new(host, port)
+      @thread = DebugThread.new do
+        while (session = server.accept)
+          self.interface = WebsocketRemoteInterface.new(session)
+          if wait_connection
+            mutex.synchronize do
+              proceed.signal
+            end
+          end
+        end
+      end
+      if wait_connection
+        mutex.synchronize do
+          proceed.wait(mutex)
+        end
+      end
+    end
+
     #
     # Starts a remote byebug
     #

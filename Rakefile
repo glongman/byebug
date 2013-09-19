@@ -48,5 +48,41 @@ namespace :demo do
     system "open ./ui/debugger.html"
   end
 
+  task 'remote_server' do
+    require 'byebug'
+    p Byebug::VERSION
+    Byebug.wait_connection = true
+    Byebug.start_websocket_server
+#    system "open ./ui/debugger.html"
+    Byebug.post_mortem do
+      p "foo"
+      raise
+      p "bar"
+    end
 
+    p "foo"
+    byebug
+    p "bar"
+    p "foo2"
+    p "bar2"
+  end
+
+  task "server" do
+    require 'byebug'
+    Byebug.wait_connection = true
+    Byebug.start
+    Byebug.start_server
+
+    Byebug.post_mortem do
+      p "foo"
+      raise
+      p "bar"
+    end
+#    Byebug.current_context.step_into
+  end
+
+  task "client" do
+    require 'byebug'
+    Byebug.start_client
+  end
 end

@@ -1,4 +1,5 @@
 var log;
+var $term;
 
 log = function(string) {
   var t;
@@ -30,11 +31,35 @@ $(function() {
     return log("ERROR: " + error);
   };
 
+  __message = ""
   socket.onmessage = function(message) {
-    return log("\nmessage: '" + message.data + "'");
+    message = message.data
+    if(undefined !== $term) {
+      if('PROMPT' == message){
+        $term.echo(__message);
+        __message = "";
+      }else{
+        __message += message
+      }
+    }else {
+      if('PROMPT' == message){
+        boot_terminal(__message)
+        __message = "";
+      }else{
+        __message += message
+        console.log(message)
+      }
+    }
+    $socket = socket
+//    return log("\nmessage: '" + message.data + "'");
   };
+//  window.onbeforeunload = function() {
+//    alert('closing');
+//    socket.close();
+//  }
 
-  $('#send').click((function(socket) {
+
+$('#send').click((function(socket) {
     return function() {
       var exception;
       if (socket.readyState === WebSocket.CONNECTING) {
