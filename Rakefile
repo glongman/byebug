@@ -59,6 +59,12 @@ namespace :demo do
       raise
       p "bar"
     end
+
+    p "foo"
+    byebug
+    p "bar"
+    p "foo2"
+    p "bar2"
   end
 
   task "server" do

@@ -1,11 +1,15 @@
-jQuery(function($, undefined) {
+
+boot_terminal = function(first_msg){
     $('#term_demo').terminal(function(command, term) {
         if (command !== '') {
             try {
-                var result = window.eval(command);
-                if (result !== undefined) {
-                    term.echo(new String(result));
-                }
+              $term = term
+              $socket.send(command)
+              //                var result = window.eval(command);
+
+//                if (result !== undefined) {
+                    term.echo(new String(command));
+//                }
             } catch(e) {
                 term.error(new String(e));
             }
@@ -13,8 +17,12 @@ jQuery(function($, undefined) {
            term.echo('');
         }
     }, {
-        greetings: 'byebug terminal',
+        greetings: first_msg,
         name: 'js_demo',
         height: 200,
         prompt: 'byebug> '});
+
+}
+
+jQuery(function($, undefined) {
 });

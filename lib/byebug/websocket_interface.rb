@@ -17,9 +17,22 @@ module Byebug
 
       @restart_file = nil
 
+      @response = nil
       @driver = ::WebSocket::Driver.server(socket)
 
       Thread.new { handle }
+    end
+
+    def signal
+      @mutex.synchronize do
+        @proceed.signal
+      end
+    end
+
+    def wait
+      @mutex.synchronize do
+        @proceed.wait(@mutex)
+      end
     end
 
     def handle
@@ -29,17 +42,27 @@ module Byebug
       end
 
       @driver.on(:message) do |e|
-        p "on message"
-        @driver.text e.data
+        p "on message #{e.data}"
+        @response = e.data
+        signal
+#        @driver.text e.data
       end
 
-      @driver.on(:close)   { puts "Connection with #{socket.addr[2]} closed." }
+      @driver.on(:close) do
+        puts "Connection with #{socket.addr[2]} closed."
+      end
+
       loop do
         IO.select([@socket], [], [], 30) or raise Errno::EWOULDBLOCK
         data = @socket.recv(1024)
-        break if data.empty?
+        if data.empty?
+          p "empty data!!!"
+          break
+        end
         @driver.parse data
       end
+      @response = nil
+      signal
     end
 
     def close
@@ -55,7 +78,7 @@ module Byebug
     end
 
     def read_command(prompt)
-      send_command "PROMPT #{prompt}"
+      send_command "PROMPT"
     end
 
     def readline_support?
@@ -63,16 +86,16 @@ module Byebug
     end
 
     def print(*args)
-      @driver.text escape(format(*args))
+      message = escape(format(*args))
+      @driver.text(message)
     end
 
     private
 
     def send_command(msg)
       @driver.text msg
-      @mutex.synchronize do
-        @proceed.wait(@mutex)
-      end
+      wait
+      @response ? @response : ""
     end
   end
 end
