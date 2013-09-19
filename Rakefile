@@ -34,7 +34,7 @@ end
 namespace :demo do
   desc 'Launch a simple fib demo in the debugger'
   task 'fib' do
-    system "./bin/byebug --post-mortem -Ilib demo/fib.rb"
+    system "ruby demo/fib.rb"
   end
 
   desc 'Launch a simple fib demo in the debugger'
@@ -54,11 +54,11 @@ namespace :demo do
     Byebug.wait_connection = true
     Byebug.start_websocket_server
 #    system "open ./ui/debugger.html"
-    Byebug.post_mortem do
-      p "foo"
-      raise
-      p "bar"
-    end
+#    Byebug.post_mortem do
+#      p "foo"
+#      raise
+#      p "bar"
+#    end
 
     p "foo"
     byebug
