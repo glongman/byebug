@@ -1,3 +1,3 @@
 module Byebug
-  VERSION = '2.1.1-shopify'
+  VERSION = '2.2.02'
 end
