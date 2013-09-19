@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Fixnum
 	def fibonacci
 		if (self < 3)  then

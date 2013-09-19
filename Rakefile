@@ -31,7 +31,14 @@ task 'test_loop_mem' do
   system "watch \"ps aux | grep -v 'sh -c r' | grep [I]test\""
 end
 
-desc 'Launch a simple fib demo in the debugger'
-task 'fib' do
-	system "ruby -Ilib demo/fib.rb"
+namespace :demo do
+  desc 'Launch a simple fib demo in the debugger'
+  task 'fib' do
+    system "./bin/byebug --post-mortem -Ilib demo/fib.rb"
+  end
+
+  desc 'Launch a simple fib demo in the debugger'
+  task 'fib_mm' do
+    system "./bin/byebug --post-mortem -Ilib demo/fib_mm.rb"
+  end
 end

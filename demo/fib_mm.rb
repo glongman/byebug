@@ -1,5 +1,3 @@
-require 'byebug'
-
 class Fixnum
 	def fib_mm
 		if (self < 3)  then
