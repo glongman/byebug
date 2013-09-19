@@ -3,6 +3,7 @@ require_relative 'byebug/version'
 require_relative 'byebug/context'
 require_relative 'byebug/processor'
 require_relative 'byebug/remote'
+require_relative 'byebug/websocket_interface'
 require 'stringio'
 require 'linecache19'
 
