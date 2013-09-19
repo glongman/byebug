@@ -30,3 +30,8 @@ desc 'Watch memory use of a looping test'
 task 'test_loop_mem' do
   system "watch \"ps aux | grep -v 'sh -c r' | grep [I]test\""
 end
+
+desc 'Launch a simple fib demo in the debugger'
+task 'fib' do
+	system "ruby -Ilib demo/fib.rb"
+end
