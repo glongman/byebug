@@ -1,40 +1,61 @@
-  var threadsGrid;
-  var framesGrid;
-  var variablesGrid;
+function Apple (type) {
+    this.type = type;
+    this.color = "red";
+    this.getInfo = function() {
+        return this.color + ' ' + this.type + ' apple';
+    };
+}
 
-  var options = {
-    enableCellNavigation: true,
-    enableColumnReorder: false,
-    forceFitColumns: true
-  };
+function Debugger () {
 
-  $(function () {
-    var threads = [];
-    var frames = [];
-    var variables = [];
+	this.threads = [];
+	this.frames = [];
+	this.variables = [];
+	this._threadsGrid = null;
+	this.framesGrid = null;
+	this.variablesGrid = null;
 
-    for (var i = 0; i < 500; i++) {
-      threads[i] = { title: "Threads " + i };
-      frames[i] = { title: "Frames " + i };
-      variables[i] = { title: "Variables " + i };
-    }
+	// Attach widgets to HTML elements, eventually we should pass in just a div
+	// and create the DOM tree programmaticaly
+	this.createWidgets = function() {
 
-    threadsGrid = new Slick.Grid(
-    	"#threadsGrid",
-    	threads,
-    	[ {id: "title", name: "Thread", field: "title"} ],
-    	options);
+	  	var options = {
+		    enableCellNavigation: true,
+		    enableColumnReorder: false,
+		    forceFitColumns: true,
+		    showHeaderRow: false,
+		  };
 
-    framesGrid = new Slick.Grid(
-    	"#framesGrid",
-    	frames,
-    	[ {id: "title", name: "Frame", field: "title"} ],
-    	options);
+	    for (var i = 0; i < 500; i++) {
+	      this.threads[i] = { title: "Threads " + i };
+	      this.frames[i] = { title: "Frames " + i };
+	      this.variables[i] = { title: "Variables " + i };
+	    }
 
-    variablesGrid = new Slick.Grid(
-    	"#variablesGrid",
-    	variables,
-    	[ {id: "title", name: "Variable", field: "title"} ],
-    	options);
+	    this.threadsGrid = new Slick.Grid(
+	    	"#threadsGrid",
+	    	this.threads,
+	    	[ {id: "title", name: "Thread", field: "title"} ],
+	    	options);
+//	    this.threadsGrid.setSelectionModel(new Slick.RowSelectionModel());
 
-  })
+	    this.framesGrid = new Slick.Grid(
+	    	"#framesGrid",
+	    	this.frames,
+	    	[ {id: "title", name: "Frame", field: "title"} ],
+	    	options);
+//		this.framesGrid.setSelectionModel(new Slick.RowSelectionModel());
+
+	    variablesGrid = new Slick.Grid(
+	    	"#variablesGrid",
+	    	this.variables,
+	    	[ {id: "title", name: "Variable", field: "title"} ],
+	    	options);
+	 };
+
+}
+
+$(function () {
+	var rubyDebugger = new Debugger();
+	rubyDebugger.createWidgets();
+});
