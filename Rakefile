@@ -41,4 +41,12 @@ namespace :demo do
   task 'fib_mm' do
     system "./bin/byebug --post-mortem -Ilib demo/fib_mm.rb"
   end
+
+  desc 'Launch a simple fib demo in the debugger'
+  task 'socket' do
+    system "ruby ws.rb&"
+    system "open ./ui/debugger.html"
+  end
+
+
 end
