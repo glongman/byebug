@@ -3,11 +3,10 @@ module Byebug
   class Context
 
     class << self
-      def real_stack_size(target_thread)
-        bt = target_thread.backtrace_locations(1)
-        bt = bt.drop_while{ |l| IGNORED_FILES.include?(l.path) || l.path == '(eval)' }
-               .take_while{ |l| !IGNORED_FILES.include?(l.path) } unless Byebug.post_mortem?
-        bt.size
+      def real_stack_size
+        Thread.current.backtrace_locations
+          .drop_while{ |l| IGNORED_FILES.include?(l.path) || l.path == '(eval)' }
+          .take_while{ |l| !IGNORED_FILES.include?(l.path) }.size
       end
     end
 

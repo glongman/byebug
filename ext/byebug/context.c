@@ -45,9 +45,9 @@ context_free(void *data)
 }
 
 static int
-real_stack_size(debug_context_t *context)
+real_stack_size()
 {
-  return FIX2INT(rb_funcall(cContext, rb_intern("real_stack_size"), 1, context->thread));
+  return FIX2INT(rb_funcall(cContext, rb_intern("real_stack_size"), 0));
 }
 
 extern VALUE
@@ -58,9 +58,9 @@ context_create(VALUE thread)
   context->last_file   = Qnil;
   context->last_line   = Qnil;
   context->flags       = 0;
+  context->stack_size  = real_stack_size();
   context->thnum       = ++thnum_max;
   context->thread      = thread;
-  context->stack_size  = real_stack_size(context);
   reset_stepping_stop_points(context);
   context->stop_reason = CTX_STOP_NONE;
   context->backtrace   = Qnil;
@@ -198,10 +198,10 @@ call_with_debug_inspector(struct call_with_inspection_data *data)
     frame_n = 0;                                                      \
   else                                                                \
     frame_n = FIX2INT(frame_no);                                      \
-  if (frame_n < 0 || frame_n >= real_stack_size(context))             \
+  if (frame_n < 0 || frame_n >= real_stack_size(rb_thread_current())) \
   {                                                                   \
     rb_raise(rb_eArgError, "Invalid frame number %d, stack (0...%d)", \
-             frame_n, real_stack_size(context) - 1);                  \
+             frame_n, real_stack_size(rb_thread_current() - 1));      \
   }                                                                   \
 
 /*
