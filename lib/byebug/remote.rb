@@ -12,6 +12,7 @@ module Byebug
 
     def start_websocket_server(host = nil, port = 7654)
       return if @thread
+
       self.interface = nil
       start
       mutex = Mutex.new
@@ -21,18 +22,24 @@ module Byebug
       server = TCPServer.new(host, port)
       @thread = DebugThread.new do
         while (session = server.accept)
-          self.interface = WebsocketRemoteInterface.new(session)
-          if wait_connection
+#          begin
+            self.interface = interface = WebsocketRemoteInterface.new(session)
+
             mutex.synchronize do
               proceed.signal
             end
-          end
+            interface.loop_data
+
+#          rescue Exception => e
+#            p "ERRRORRRR #{Thread.list}"
+#            p "#{$!}"
+#            p e.class
+#          end
         end
       end
-      if wait_connection
-        mutex.synchronize do
-          proceed.wait(mutex)
-        end
+
+      mutex.synchronize do
+        proceed.wait(mutex)
       end
     end
 

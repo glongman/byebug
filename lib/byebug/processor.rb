@@ -70,8 +70,10 @@ module Byebug
         rescue SignalException
           raise
         rescue Exception
-          print "INTERNAL ERROR!!! #\{$!\}\n" rescue nil
-          print $!.backtrace.map{|l| "\t#\{l\}"}.join("\n") rescue nil
+          p "error on #{mname}"
+          p Thread.list
+          p "INTERNAL ERROR!!! #\{$!\}\n" rescue nil
+          p $!.backtrace.map{|l| "\t#\{l\}"}.join("\n") rescue nil
         end
       }
     end
@@ -182,7 +184,6 @@ module Byebug
       def process_commands(context, file, line)
         state, commands = always_run(context, file, line, 1)
         $state = Command.settings[:testing] ? state : nil
-
         preloop(commands, context)
         print state.location if Command.settings[:autolist] == 0
 

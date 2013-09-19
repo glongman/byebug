@@ -20,7 +20,7 @@ module Byebug
       @response = nil
       @driver = ::WebSocket::Driver.server(socket)
 
-      Thread.new { handle }
+      handle
     end
 
     def signal
@@ -37,7 +37,7 @@ module Byebug
 
     def handle
       @driver.on(:connect) do
-        p "connected"
+#        p "connected"
         @driver.start
       end
 
@@ -49,23 +49,41 @@ module Byebug
       end
 
       @driver.on(:close) do
-        puts "Connection with #{socket.addr[2]} closed."
+        puts "Connection closed."
       end
 
-      loop do
-        IO.select([@socket], [], [], 30) or raise Errno::EWOULDBLOCK
-        data = @socket.recv(1024)
-        if data.empty?
-          p "empty data!!!"
-          break
-        end
-        @driver.parse data
+      @driver.on(:open) do
+        p "on open"
       end
+
+      @driver.on(:error) do
+        p "ERROR SOCKET"
+      end
+
+      handle_data
+    end
+
+    def handle_data
+      IO.select([@socket], [], []) or raise Errno::EWOULDBLOCK
+      data = @socket.recv(2048)
+#      p "data #{data}"
+      if data.empty?
+        p "empty data!!!"
+        return false
+      end
+      @driver.parse data
+      true
+    end
+
+    def loop_data
+      while(handle_data); end
+    ensure
       @response = nil
       signal
     end
 
     def close
+      puts 'CLOSE'
       @socket.close
     rescue Exception
     end
@@ -87,6 +105,7 @@ module Byebug
 
     def print(*args)
       message = escape(format(*args))
+#      p "message: #{message} "
       @driver.text(message)
     end
 
