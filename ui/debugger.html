@@ -1,17 +1,79 @@
 <!DOCTYPE html>
 <html>
 	<head>
-		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
-		<script src="ws.js"></script>
+  		<title>Frictionless Debugger</title>
+  		<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" ></script>
+
+		  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" />
+		  <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+		  <link rel="stylesheet" href="/resources/demos/style.css" />
+
+		  <!-- terminal from http://terminal.jcubic.pl/#demo -->
+		  <script src="jquery.terminal-0.7.6.min.js"></script>
+		  <link rel="stylesheet" href="jquery.terminal.css" />
+
+		  <!-- WebSocket connection -->
+		  <script src="ws.js"></script>
+
 		<script>
 		$(document).ready(function(){
 			log("ready");
+
+    		$( "#debugger_dialog" ).dialog( { 
+    			width: 700, 
+    			height: 500, 
+				position: { my: "left top", at: "left top", of: window } 
+			});
+
+    		$( "#comms_dialog" ).dialog( {
+    			height: 200, 
+				position: { my: "right bottom", at: "right bottom", of: window } 
+    		});
+
+    		$( "#terminal_dialog" ).dialog( {
+    			width: 700, 
+    			height: 200, 
+				position: { my: "left bottom", at: "left bottom", of: window } 
+    		});
+
+			jQuery(function($, undefined) {
+			    $('#term_demo').terminal(function(command, term) {
+			        if (command !== '') {
+			            try {
+			                var result = window.eval(command);
+			                if (result !== undefined) {
+			                    term.echo(new String(result));
+			                }
+			            } catch(e) {
+			                term.error(new String(e));
+			            }
+			        } else {
+			           term.echo('');
+			        }
+			    }, {
+			        greetings: 'byebug terminal',
+			        name: 'js_demo',
+			        height: 200,
+			        prompt: 'byebug> '});
+			});
+
 		});
 		</script>
 	</head>
 	<body>
-		<p>debugger goes here</p>
-		<p id="communications"></p>
+		<div id="debugger_dialog" title="Debugger">
+		  <p>This is the default dialog which is useful for displaying information. The dialog window can be moved, resized and closed with the 'x' icon.</p>
+		</div>
+
+		<div id="comms_dialog" title="Communications">
+			<p id="communications"></p>
+		</div>
+
+		<div id="terminal_dialog" title="Terminal">
+			<p id="term_demo"></p>
+		</div>
+
 	</body>
 </html>
 
