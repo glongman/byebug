@@ -212,7 +212,7 @@ function Debugger () {
   this.restart = function() {
     alert("this will restart the session and spawn an new page")
     $debugInterface.genericCommand('restart', function(data) {
-      window.close();
+      open(location, '_self').close();
     });
   }
 
