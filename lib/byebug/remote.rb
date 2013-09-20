@@ -22,19 +22,18 @@ module Byebug
       server = TCPServer.new(host, port)
       @thread = DebugThread.new do
         while (session = server.accept)
-#          begin
+          begin
             self.interface = interface = WebsocketRemoteInterface.new(session)
 
             mutex.synchronize do
               proceed.signal
             end
             interface.loop_data
-
-#          rescue Exception => e
-#            p "ERRRORRRR #{Thread.list}"
-#            p "#{$!}"
-#            p e.class
-#          end
+          rescue Exception => e
+            p "Error on DebugThread"
+            p e.class
+            p "#{$!}"
+          end
         end
       end
 
