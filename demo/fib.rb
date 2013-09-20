@@ -1,7 +1,7 @@
 require 'byebug'
 
 p Byebug::VERSION
-Byebug.start_websocket_server
+Byebug.start_websocket_server(browser: true)
 
 class Fixnum
   def fibonacci

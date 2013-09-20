@@ -11,8 +11,10 @@ module Byebug
     # If in remote mode, wait for the remote connection
     attr_accessor :wait_connection
 
-    def start_websocket_server(host = nil, port = 7654)
+    def start_websocket_server(options = {})
       return if @thread
+
+      host, port = options[:host], (options[:port] || 7654)
 
       self.interface = nil
       start
@@ -21,7 +23,9 @@ module Byebug
 
       p "starting websocket server on #{port}"
       server = TCPServer.new(host, port)
-      system "open ./ui/debugger.html"
+      if options[:browser]
+        system "open ./ui/debugger.html"
+      end
       @thread = DebugThread.new do
         while (session = server.accept)
           begin
