@@ -18,6 +18,3 @@ boot_terminal = function(first_msg){
         prompt: 'byebug> '});
 
 }
-
-jQuery(function($, undefined) {
-});
