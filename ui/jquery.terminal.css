@@ -29,6 +29,7 @@
     display: block;
     line-height: 14px;
     height: auto;
+    font-family: FreeMono, monospace;
 }
 .terminal .prompt {
     float: left;

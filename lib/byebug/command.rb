@@ -79,6 +79,7 @@ module Byebug
         DEF_OPTIONS.each do |o, v|
           klass.options[o] = v if klass.options[o].nil?
         end
+
         commands << klass
       end
 
