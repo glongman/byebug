@@ -303,13 +303,15 @@ c_call_event(VALUE trace_point, void *data)
 static void
 c_return_event(VALUE trace_point, void *data)
 {
-  EVENT_SETUP
+  if (rb_intern_str(rb_funcall(rb_thread_current(), rb_intern("status"), 0)) != rb_intern("aborting")) {
+    EVENT_SETUP
 
-  if (dc->stack_size > 0) dc->stack_size--;
+    if (dc->stack_size > 0) dc->stack_size--;
 
-  EVENT_COMMON
+    EVENT_COMMON
 
-  cleanup(dc);
+    cleanup(dc);
+  }
 }
 
 static void

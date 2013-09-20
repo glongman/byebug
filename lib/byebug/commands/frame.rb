@@ -102,7 +102,7 @@ module Byebug
       if Byebug.post_mortem?
         realsize = @state.context.stack_size
       else
-        realsize = Context.real_stack_size
+        realsize = Context.real_stack_size @state.context.thread
         size = @state.context.stack_size
         if size != realsize
           errmsg "Byebug's stacksize (#{size}) should be #{realsize}. " \
