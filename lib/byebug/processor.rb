@@ -189,7 +189,7 @@ module Byebug
 
         while !state.proceed?
           input = @interface.command_queue.empty? ?
-                  @interface.read_command(prompt(context)) :
+                  @interface.read_command(prompt(context), @last_cmd) :
                   @interface.command_queue.shift
           break unless input
           catch(:debug_error) do

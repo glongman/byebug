@@ -95,7 +95,7 @@ module Byebug
     def finalize
     end
 
-    def read_command(prompt)
+    def read_command(prompt, last_cmd = nil)
       send_command "PROMPT"
     end
 
