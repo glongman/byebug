@@ -14,7 +14,7 @@ boot_terminal = function(first_msg){
     }, {
         greetings: first_msg,
         name: 'js_demo',
-        height: 200,
+        height: 500,
         prompt: 'byebug> '});
 
 }
