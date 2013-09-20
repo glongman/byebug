@@ -9,6 +9,7 @@ function Debugger () {
 	// and create the DOM tree programmaticaly
 	this.createWidgets = function() 
 	{
+    var _this = this;
 
     var options = {
       enableCellNavigation: true,
@@ -114,9 +115,9 @@ function Debugger () {
       _this.threads = [];
       for (var i = 0; i < replyData.length; i++) {
         var threadInfo = { "title": replyData[i] };
-       _this.threads[i] = theadInfo;
+       _this.threads[i] = threadInfo;
       }
-      _this.threadsGrid.setData(_this.frames);
+      _this.threadsGrid.setData(_this.threads);
       _this.threadsGrid.setSelectedRows([]);
       _this.threadsGrid.invalidate();
     });
