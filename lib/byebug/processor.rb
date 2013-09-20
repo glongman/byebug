@@ -70,10 +70,8 @@ module Byebug
         rescue SignalException
           raise
         rescue Exception
-          p "error on #{mname}"
-          p Thread.list
-          p "INTERNAL ERROR!!! #\{$!\}\n" rescue nil
-          p $!.backtrace.map{|l| "\t#\{l\}"}.join("\n") rescue nil
+          print "INTERNAL ERROR!!! #\{$!\}\n" rescue nil
+          print $!.backtrace.map{|l| "\t#\{l\}"}.join("\n") rescue nil
         end
       }
     end
