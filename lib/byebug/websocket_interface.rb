@@ -114,7 +114,7 @@ module Byebug
     def send_command(msg)
       @driver.text msg
       wait
-      @response ? @response : ""
+      @response
     end
   end
 end
