@@ -1,8 +1,6 @@
 require 'byebug'
 
 p Byebug::VERSION
-
-Byebug.wait_connection = true
 Byebug.start_websocket_server
 
 class Fixnum

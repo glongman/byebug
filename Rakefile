@@ -51,7 +51,6 @@ namespace :demo do
   task 'remote_server' do
     require 'byebug'
     p Byebug::VERSION
-    Byebug.wait_connection = true
     Byebug.start_websocket_server
 #    system "open ./ui/debugger.html"
 #    Byebug.post_mortem do
@@ -59,7 +58,6 @@ namespace :demo do
 #      raise
 #      p "bar"
 #    end
-
     p "foo"
     byebug
     p "bar"
