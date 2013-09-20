@@ -20,6 +20,7 @@ module Byebug
 
       p "starting websocket server on #{port}"
       server = TCPServer.new(host, port)
+      system "open ./ui/debugger.html"
       @thread = DebugThread.new do
         while (session = server.accept)
           begin
@@ -35,11 +36,6 @@ module Byebug
             p "#{$!}"
           end
         end
-      end
-
-      Thread.new do
-        sleep(0.3)
-        system "open ./ui/debugger.html"
       end
 
       mutex.synchronize do
