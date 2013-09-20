@@ -11,6 +11,13 @@ $(function() {
   var socket;
   socket = new WebSocket('ws://0.0.0.0:7654');
   log("opening WebSocket");
+  $socket = socket
+
+  window.onbeforeunload = function() {
+    $socket.onclose = function () {}
+    ; // disable onclose handler first
+    $socket.close()
+  }
 
   socket.onopen = function(event) {
     log('\n-- connected to server.');
@@ -35,12 +42,9 @@ $(function() {
   socket.onmessage = function(message) {
     message = message.data
     if(undefined !== $term) {
-      if('PROMPT' == message){
-        $term.echo(__message);
-        __message = "";
-      }else{
-        __message += message
-      }
+      message = message.replace(/(\r\n|\n|\r)/gm,"")
+      if('PROMPT' != message)
+        $term.echo(message);
     }else {
       if('PROMPT' == message){
         boot_terminal(__message)
@@ -50,7 +54,6 @@ $(function() {
         console.log(message)
       }
     }
-    $socket = socket
 //    return log("\nmessage: '" + message.data + "'");
   };
 //  window.onbeforeunload = function() {
