@@ -58,7 +58,7 @@ $(function() {
         window.rubyDebugger.updateThreads();
       }else{
         __message += message
-        console.log(message)
+//        console.log(message)
       }
     }
 //    return log("\nmessage: '" + message.data + "'");

@@ -9,8 +9,8 @@ function DebugInterface (websocket) {
   	console.log("DebugInterface.start()");
   }
 
-  // Helper to return the selected thread (may be null)
-  this.getThreads = function( onComplete ) {
+  // 
+  this.genericCommand = function( command, onComplete ) {
   	var onmessage = this.websocket.onmessage;
   	var reply = []; 
   	var _this = this;
@@ -26,7 +26,27 @@ function DebugInterface (websocket) {
   		}
   	};
 
-  	this.websocket.send('thread list');
+  	this.websocket.send(command);
+  }
+
+  // Helper to get the threads list
+  this.getThreads = function( onComplete ) {
+  	this.genericCommand('thread list', onComplete);
+  }
+
+  // Helper to get the stack frames list
+  this.getFrames = function( onComplete ) {
+  	this.genericCommand('bt', onComplete);
+  }
+
+  // Helper to set the current stack frame
+  this.selectFrame = function( frameNumber, onComplete ) {
+  	this.genericCommand('frame ' + frameNumber, onComplete);
+  }
+
+  // Helper to set the current stack frame
+  this.getSource = function( onComplete ) {
+  	this.genericCommand('list', onComplete);
   }
 
 }

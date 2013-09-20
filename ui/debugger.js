@@ -71,8 +71,19 @@ function Debugger () {
 
   	// register handlers for frame change
     this.framesGrid.onSelectedRowsChanged.subscribe(function (e) {
-      _this.updateVariables();
-      _this.updateSource();
+      var selection = _this.framesGrid.getSelectedRows();
+      if (selection.length == 1) {
+        $debugInterface.selectFrame(
+            selection[0],
+            function (data) {
+              _this.updateVariables();
+              _this.updateSource();
+            }
+          );
+      } else {
+        _this.updateVariables();
+        _this.updateSource();        
+      }
     });
 
   	// register handlers for variable change
@@ -125,18 +136,19 @@ function Debugger () {
 
   // Update stack frames from the currently selected thread
   this.updateStackFrames = function() {
-    var selectedRows = this.threadsGrid.getSelectedRows();
+    var selectedRows = _this.threadsGrid.getSelectedRows();
     var threadNumber = selectedRows[0];
 
     this.frames = [];
-    for (var i = 0; i < 500; i++) {
-      this.frames[i] = { title: "thread-" +  threadNumber + "-frame-" + i };
-    }
-
-    this.framesGrid.setData(this.frames, true);
-    this.framesGrid.setSelectedRows([]);
-    this.framesGrid.invalidate();
-    console.log("updateStackFrames");
+    $debugInterface.getFrames( function(replyData) {
+      for (var i = 0; i < replyData.length; i++) {
+        var info = { "title": replyData[i] };
+       _this.frames[i] = info;
+      }
+      _this.framesGrid.setData(_this.frames, true);
+      _this.framesGrid.setSelectedRows([]);
+      _this.framesGrid.invalidate();
+    });
   }
 
   // Update update variables for the currently selected method
@@ -158,9 +170,14 @@ function Debugger () {
 
   // Update update source for the currently selected method
   this.updateSource = function() {
-    var newText = JSON.stringify(this.getSelectedFrame());
-    this.methodTextView.setText(newText);
-    console.log("updateSource");
+
+    $debugInterface.getSource( function (data) {
+      var newText = "";
+      for (var i=0; i < data.length; i++) {
+        newText += data[i];
+      }
+      _this.methodTextView.setText(newText);
+    });
   }
 
   // Update update source for the currently selected method
