@@ -49,6 +49,13 @@ $(function() {
       if('PROMPT' == message){
         boot_terminal(__message)
         __message = "";
+
+        // Now bring up the debug interface
+        $debugInterface = new DebugInterface(socket);
+        $debugInterface.start();
+
+        // Get the debugger to refresh the thread list
+        window.rubyDebugger.updateThreads();
       }else{
         __message += message
         console.log(message)

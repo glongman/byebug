@@ -17,10 +17,6 @@ function Debugger () {
       showHeaderRow: false,
     };
 
-    for (var i = 0; i < 5; i++) {
-     this.threads[i] = { title: "Threads " + i };
-    }
-
     this.threadsGrid = new Slick.Grid(
       "#threadsGrid",
       this.threads,
@@ -112,6 +108,21 @@ function Debugger () {
   }
 
   // Update stack frames from the currently selected thread
+  var _this = this;
+  this.updateThreads = function() {
+    $debugInterface.getThreads( function(replyData) {
+      _this.threads = [];
+      for (var i = 0; i < replyData.length; i++) {
+        var threadInfo = { "title": replyData[i] };
+       _this.threads[i] = theadInfo;
+      }
+      _this.threadsGrid.setData(_this.frames);
+      _this.threadsGrid.setSelectedRows([]);
+      _this.threadsGrid.invalidate();
+    });
+  }
+
+  // Update stack frames from the currently selected thread
   this.updateStackFrames = function() {
     var selectedRows = this.threadsGrid.getSelectedRows();
     var threadNumber = selectedRows[0];
@@ -189,8 +200,5 @@ $(function () {
 
 	$(window).resize(function() {
 		rubyDebugger.resizeCanvas();
-//	  rubyDebugger.threadsGrid.resizeCanvas()
-//	  rubyDebugger.variablesGrid.resizeCanvas()
-//	  rubyDebugger.framesGrid.resizeCanvas()
 });
 });

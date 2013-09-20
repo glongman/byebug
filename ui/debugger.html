@@ -36,6 +36,7 @@
   </script>
 
   <!-- WebSocket connection -->
+  <script src="debug_interface.js" type="text/javascript"></script>
   <script src="ws.js" type="text/javascript"></script>
 
   <!-- Debugger logic -->
@@ -70,18 +71,15 @@
               <button>Into</button>
               <button>Over</button>
               <button>Return</button>
+              <button>Copy Stack</button>
            </td>
         </tr>
-        <tr style="background-color: darkgrey;">
+        <tr style="background-color: darkgrey">
            <td colspan="3">
               <div>
-                 <pre id="methodText" class="editor" data-editor-lang="js"></pre>
+                 <pre id="methodText" class="editor" data-editor-lang="js" style="height: 250px">
+                 </pre>
               </div>
-           </td>
-        </tr>
-        <tr style="position: absolute; bottom: 0px">
-           <td colspan="3">
-              <p>status line here</p>
            </td>
         </tr>
      </table>
