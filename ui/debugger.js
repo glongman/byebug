@@ -65,7 +65,7 @@ function Debugger () {
     // register handlers for thread change
     var _this = this;
     this.threadsGrid.onSelectedRowsChanged.subscribe(function (e) {
-      _this.updateStackFrames();
+      _this.updateStackFrames([0]);
       _this.updateVariables();
     });
 
@@ -135,7 +135,7 @@ function Debugger () {
   }
 
   // Update stack frames from the currently selected thread
-  this.updateStackFrames = function() {
+  this.updateStackFrames = function( newSelection ) {
     var selectedRows = _this.threadsGrid.getSelectedRows();
     var threadNumber = selectedRows[0];
 
@@ -146,7 +146,9 @@ function Debugger () {
        _this.frames[i] = info;
       }
       _this.framesGrid.setData(_this.frames, true);
-      _this.framesGrid.setSelectedRows([]);
+
+      var selection = newSelection || [];
+      _this.framesGrid.setSelectedRows(selection);
       _this.framesGrid.invalidate();
     });
   }
@@ -190,6 +192,28 @@ function Debugger () {
     }
     this.variablesTextView.setText(text);
     console.log("updateVariablesText");
+  }
+
+  // Step into the next method
+  this.stepInto = function() {
+    $debugInterface.genericCommand('step', function(data) {
+      _this.updateStackFrames([0]);
+    });
+  }
+
+  // Step into the next method
+  this.stepOver = function() {
+    $debugInterface.genericCommand('next', function(data) {
+      _this.updateStackFrames([0]);
+    });
+  }
+
+  // Step into the next method
+  this.restart = function() {
+    alert("this will restart the session and spawn an new page")
+    $debugInterface.genericCommand('restart', function(data) {
+      window.close();
+    });
   }
 
 	// Force a repaint to deal with SlickGrid issues
