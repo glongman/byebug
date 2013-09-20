@@ -7,7 +7,7 @@ function Debugger () {
 
 	// Attach widgets to HTML elements, eventually we should pass in just a div
 	// and create the DOM tree programmaticaly
-	this.createWidgets = function() 
+	this.createWidgets = function()
 	{
     var _this = this;
 
@@ -66,7 +66,6 @@ function Debugger () {
     var _this = this;
     this.threadsGrid.onSelectedRowsChanged.subscribe(function (e) {
       _this.updateStackFrames([0]);
-      _this.updateVariables();
     });
 
   	// register handlers for frame change
@@ -77,12 +76,10 @@ function Debugger () {
             selection[0],
             function (data) {
               _this.updateVariables();
-              _this.updateSource();
             }
           );
       } else {
         _this.updateVariables();
-        _this.updateSource();        
       }
     });
 
@@ -96,7 +93,7 @@ function Debugger () {
   // Helper to return the selected thread (may be null)
   this.getSelectedThread = function() {
     var selection = this.threadsGrid.getSelectedRows();
-    if (selection.length == 0) 
+    if (selection.length == 0)
       return null;
     return this.threads[selection[0]];
   }
@@ -104,7 +101,7 @@ function Debugger () {
   // Helper to return the selected method (may be null)
   this.getSelectedFrame = function() {
     var selection = this.framesGrid.getSelectedRows();
-    if (selection.length == 0) 
+    if (selection.length == 0)
       return null;
     return this.frames[selection[0]];
   }
@@ -148,26 +145,31 @@ function Debugger () {
       _this.framesGrid.setData(_this.frames, true);
 
       var selection = newSelection || [];
-      _this.framesGrid.setSelectedRows(selection);
+//      _this.framesGrid.setSelectedRows(selection);
       _this.framesGrid.invalidate();
+      _this.updateVariables();
     });
   }
 
   // Update update variables for the currently selected method
   this.updateVariables = function() {
-    this.variables = [];
-    var selectedFrame = this.getSelectedFrame();
+      this.variables = [];
+      var _this;
+      _this = this;
 
-    if (null != selectedFrame) {
-      for (var i = 0; i < 500; i++) {
-       this.variables[i] = { title: selectedFrame.title + "-var-" + i };
-      }
-    }
+      $debugInterface.getVariables( function(replyData) {
 
-   this.variablesGrid.setData(this.variables, true);
-   this.variablesGrid.setSelectedRows([]);
-   this.variablesGrid.invalidate();
-   console.log("updateVariables");
+	  for (var i = 0; i < replyData.length; i++) {
+              var info = { "title": replyData[i] };
+	      _this.variables[i] = info;
+	  }
+
+	  _this.variablesGrid.setData(_this.variables, true);
+	  _this.variablesGrid.setSelectedRows([]);
+	  _this.variablesGrid.invalidate();
+          _this.updateSource();
+    });
+
  }
 
   // Update update source for the currently selected method
@@ -220,7 +222,7 @@ function Debugger () {
 	this.resizeCanvas = function() {
    this.threadsGrid.resizeCanvas();
    this.variablesGrid.resizeCanvas();
-   this.framesGrid.resizeCanvas();	
+   this.framesGrid.resizeCanvas();
   };
 
   // Automatically select to make life easier
