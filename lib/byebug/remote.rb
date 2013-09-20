@@ -37,6 +37,11 @@ module Byebug
         end
       end
 
+      Thread.new do
+        sleep(0.3)
+        system "open ./ui/debugger.html"
+      end
+
       mutex.synchronize do
         proceed.wait(mutex)
       end
