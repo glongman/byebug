@@ -174,14 +174,17 @@ function Debugger () {
 
   // Update update source for the currently selected method
   this.updateSource = function() {
+      var frame = this.framesGrid.getSelectedRows();
+      if(frame.length == 0)
+	  frame = [0]
 
-    $debugInterface.getSource( function (data) {
-      var newText = "";
-      for (var i=0; i < data.length; i++) {
-        newText += data[i];
-      }
-      _this.methodTextView.setText(newText);
-    });
+      $debugInterface.selectFrame(frame, function (data) {
+	  var newText = "";
+	  for (var i=0; i < data.length; i++) {
+              newText += data[i];
+	  }
+	  _this.methodTextView.setText(newText);
+      });
   }
 
   // Update update source for the currently selected method
