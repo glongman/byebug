@@ -5,11 +5,6 @@ boot_terminal = function(first_msg){
             try {
               $term = term
               $socket.send(command)
-              //                var result = window.eval(command);
-
-//                if (result !== undefined) {
-                    term.echo(new String(command));
-//                }
             } catch(e) {
                 term.error(new String(e));
             }
