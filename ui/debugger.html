@@ -2,110 +2,98 @@
 
 <html>
 <head>
-	<title>Frictionless Debugger</title>
+  <title>Byebug Debugger</title>
 
-	<!-- jquery stuff -->
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css">
-	<script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
-	<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script>
-	<script src="http://mleibman.github.io/SlickGrid/lib/jquery.event.drag-2.2.js" type="text/javascript"></script>
+  <!-- jquery stuff -->
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css" type="text/css">
+  <script src="http://code.jquery.com/jquery-1.9.1.js" type="text/javascript"></script>
+  <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js" type="text/javascript"></script>
+  <script src="http://mleibman.github.io/SlickGrid/lib/jquery.event.drag-2.2.js" type="text/javascript"></script>
 
-	<!-- terminal from http://terminal.jcubic.pl/#demo -->
-	<script src="jquery.terminal-0.7.6.min.js" type="text/javascript"></script>
-	<link rel="stylesheet" href="jquery.terminal.css" type="text/css">
+  <!-- terminal from http://terminal.jcubic.pl/#demo -->
+  <script src="jquery.terminal-0.7.6.min.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="jquery.terminal.css" type="text/css">
 
-	<!-- grid from https://github.com/mleibman/SlickGrid -->
-	<script src="slick.core.js" type="text/javascript"></script>
-	<script src="slick.grid.js" type="text/javascript">	</script>
-	<link rel="stylesheet" href="http://mleibman.github.io/SlickGrid/slick.grid.css" type="text/css">
-	<link rel="stylesheet" href="http://mleibman.github.io/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css">
-	<link rel="stylesheet" href="http://mleibman.github.io/SlickGrid/examples/examples.css" type="text/css">
+  <!-- grid from https://github.com/mleibman/SlickGrid -->
+  <script src="slick.core.js" type="text/javascript"></script>
+  <script src="slick.grid.js" type="text/javascript"> </script>
+  <script src="slick.rowselectionmodel.js" type="text/javascript"></script>
+  <link rel="stylesheet" href="http://mleibman.github.io/SlickGrid/slick.grid.css" type="text/css">
+  <link rel="stylesheet" href="http://mleibman.github.io/SlickGrid/css/smoothness/jquery-ui-1.8.16.custom.css" type="text/css">
+  <link rel="stylesheet" href="http://mleibman.github.io/SlickGrid/examples/examples.css" type="text/css">
 
-	<!-- Orion editor, see: http://wiki.eclipse.org/Orion/How_Tos/Editor_Build -->
-	<link rel="stylesheet" type="text/css" href="http://eclipse.org/orion/editor/releases/2.0/built-editor.css">
-	<script src="http://eclipse.org/orion/editor/releases/2.0/built-editor.min.js" type="text/javascript"></script>
-	<script type="text/javascript">
-	
-	/*global require*/
-	require(["orion/editor/edit"], function(edit) {
-		edit({className: "editor"});
-	});
-	</script>
+  <!-- Orion editor, see: http://wiki.eclipse.org/Orion/How_Tos/Editor_Build -->
+  <link rel="stylesheet" type="text/css" href="http://eclipse.org/orion/editor/releases/2.0/built-editor.css">
+  <script src="http://eclipse.org/orion/editor/releases/2.0/built-editor.js" type="text/javascript"></script>
 
-	<!-- WebSocket connection -->
-	<script src="ws.js" type="text/javascript"></script>
+  <script type="text/javascript">
+  /*
+  require(["orion/editor/edit"], function(edit) {
+    edit({className: "editor"});
+  });
+  */
+  </script>
 
-	<!-- Debugger logic -->
-	<script src="dialogs.js" type="text/javascript"></script>
-	<script src="terminal.js" type="text/javascript"></script>
-	<script src="debugger.js" type="text/javascript"></script>
+  <!-- WebSocket connection -->
+  <script src="ws.js" type="text/javascript"></script>
+
+  <!-- Debugger logic -->
+  <script src="dialogs.js" type="text/javascript"></script>
+  <script src="terminal.js" type="text/javascript"></script>
+  <script src="debugger.js" type="text/javascript"></script>
 </head>
 
-<body>
-	<div id="debugger_dialog" title="Debugger">
-		<table style="width: 100%; table-layout: fixed">
-			<tr>
-				<td valign="top" colspan="3">
-					<div id="threadsGrid" style="height: 100px; width: 100%"></div>
-				</td>
-			</tr>
+<body style="background-color: #F9F9F9">
+  <div id="debugger_dialog" title="Debugger" border="10">
+     <table style="width: 100%; table-layout: fixed">
+        <tr>
+           <td valign="top" colspan="3">
+              <div id="threadsGrid" style="height: 50px;"></div>
+           </td>
+        </tr>
+        <tr>
+           <td>
+              <div id="framesGrid" style="height: 150px;"></div>
+           </td>
+           <td>
+              <div id="variablesGrid" style="height: 150px;"></div>
+           </td>
+           <td>
+              <div>
+                <pre id="variablesText" class="editor" data-editor-lang="js" style="height: 150px;"></pre>
+              </div>
+           </td>
+        </tr>
+        <tr>
+           <td colspan="3">
+              <button>Into</button>
+              <button>Over</button>
+              <button>Return</button>
+           </td>
+        </tr>
+        <tr style="background-color: darkgrey;">
+           <td colspan="3">
+              <div>
+                 <pre id="methodText" class="editor" data-editor-lang="js"></pre>
+              </div>
+           </td>
+        </tr>
+        <tr style="position: absolute; bottom: 0px">
+           <td colspan="3">
+              <p>status line here</p>
+           </td>
+        </tr>
+     </table>
+  </div>
 
-			<tr>
-				<td>
-					<div id="framesGrid" style="height: 150px;"></div>
-				</td>
+  <div id="comms_dialog" title="Communications">
+    <p id="communications"></p>
+  </div>
 
-				<td>
-					<div id="variablesGrid" style="height: 150px;"></div>
-				</td>
-
-				<td>
-					<div>
-						<pre id="variablesText" class="editor" data-editor-lang="js" style="height: 150px;">
-						variable value here
-						</pre>
-					</div>
-				</td>
-			</tr>
-
-			<tr colspan="3">
-				<td>
-					<p>stepping buttons go here</p>
-				</td>
-			</tr>
-
-			<tr>
-				<td colspan="3">
-					<div>
-						<pre id="methodText" class="editor" data-editor-lang="js">
-/*
-* This is an Orion editor sample.
-*/
-function() {
-	var a = 'hi there!';
-	window.console.log(a);
-}
-						</pre>
-					</div>
-				</td>
-			</tr>
-
-			<tr>
-				<td colspan="3">
-					<p>status line here</p>
-				</td>
-			</tr>	
-		</table>
-	</div>
-
-	<div id="comms_dialog" title="Communications">
-		<p id="communications"></p>
-	</div>
-
-	<div id="terminal_dialog" title="Terminal">
-		<p id="term_demo"></p>
-	</div>
+  <div id="terminal_dialog" title="Terminal">
+    <p id="term_demo"></p>
+  </div>
 
 </body>
 </html>
